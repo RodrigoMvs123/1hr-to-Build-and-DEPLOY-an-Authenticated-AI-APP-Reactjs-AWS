@@ -182,4 +182,96 @@ travel-destination-generator/amplify/data/resources.ts
 
 travel-destination-generator/amplify/data/resources.ts
 ```ts
+import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
+
+const schema = a.schema({
+  BedrockResponse: a.customType({
+    body: a.string(),
+    error: a.string(),
+  }),
+
+  askBedrock: a
+      .query()
+      .arguments({ interests: a.string().array() })
+      .returns(a.ref("BedrockResponse"))
+      .authorization((allow) => [allow.authenticated()])
+      .handler(
+          a.handler.custom({ entry: "./bedrock.js", dataSource: "bedrockDS" })
+      ),
+});
+
+export type Schema = ClientSchema<typeof schema>;
+
+export const data = defineData({
+  schema,
+  authorizationModes: {
+    defaultAuthorizationMode: "apiKey",
+    apiKeyAuthorizationMode: {
+      expiresInDays: 30,
+    },
+  },
+});
 ```
+
+#### Visual Studio Code
+Terminal
+```
+npx ampx sandbox
+> 
+    amplify_outputs.json ( After tutorial to deactivated from aws account )
+
+npm install aws-amplify @aws-amplify/ui-react // Ui content 
+```
+
+#### Visual Studio Code
+```
+Explorer
+Open Editors
+travel-destination-generator/amplify/auth/resources.ts
+travel-destination-generator/amplify/data/bedrock.js 
+travel-destination-generator/amplify/backend.ts
+travel-destination-generator/amplify/data/resources.ts
+travel-destination-generator/src/main.tsx
+```
+
+travel-destination-generator/src/main.tsx
+```tsx
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.tsx'
+import { Authenticator } from "@aws-amplify/ui-react";
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+      <Authenticator>
+        <App />
+      </Authenticator>
+  </StrictMode>,
+)
+```
+
+#### Visual Studio Code
+```
+Explorer
+Open Editors
+travel-destination-generator/amplify/auth/resources.ts
+travel-destination-generator/amplify/data/bedrock.js 
+travel-destination-generator/amplify/backend.ts
+travel-destination-generator/amplify/data/resources.ts
+travel-destination-generator/src/main.tsx
+travel-destination-generator/src/App.tsx
+```
+
+travel-destination-generator/src/App.tsx
+```tsx
+
+time 19:51
+
+
+
+
+
+
+
+
